@@ -91,42 +91,6 @@ class DoublyEndedQueue {
         }
         return current;
     }
-
-    // // set(index, value){
-    // //     var foundNode = this.get(index);
-    // //     if (foundNode != null) {
-    // //         foundNode.value = value;
-    // //         return true;
-    // //     }
-    // //     return false;
-    // }
-    // insert(index, value){
-    //     if (index < 0 || index > this.length) return null;
-    //     if (index === 0 ) return !!this.unshift(value);
-    //     if (index === this.length) return !!this.push(value);
-    //     var newNode = new Node(value);
-    //     var prevNode = this.get(index-1);
-    //     var nextNode = prevNode.next;
-    //     prevNode.next = newNode;
-    //     newNode.prev = prevNode;
-    //     newNode.next = nextNode;
-    //     nextNode.prev = newNode;
-    //     this.length++;
-    //     return true;
-    // }
-    // remove(index){
-    //     if (index < 0 || index >= this.length) return null;
-    //     if (index === 0) return this.shift();
-    //     if (index === this.length) return this.pop();
-    //     var removedNode = this.get(index);
-    //     removedNode.prev.next = removedNode.next;
-    //     removedNode.next.prev = removedNode.prev;
-    //     removedNode.next = null;
-    //     removedNode.prev = null;
-    //     length--;
-    //     return removedNode;
-    // }
-    
 }
 
 var obj = new DoublyEndedQueue()
