@@ -1,39 +1,46 @@
-def find_ways_count(matrix, w, h):
-    ways_arr = [[1 for _ in range(w)] for _ in range(h)]
-
-    incrementer_for_letter = dict()
-    letter_was_in_column = dict()
-
-    for i in range(w):
-        for j in range(h):
-            letter = matrix[j][i]
-            if i+1 < w:
-                if matrix[j][i] == matrix[j][i+1]:
-                    ways_arr[j][i+1] -= 1
-
-            if letter in incrementer_for_letter:
-                ways_arr[j][i] += incrementer_for_letter[letter]
-
-            if letter in letter_was_in_column:
-                letter_was_in_column[letter] += ways_arr[j][i]
-            else:
-                letter_was_in_column[letter] = ways_arr[j][i]
-
-        for (letter, count) in letter_was_in_column.items():
-            if letter in incrementer_for_letter:
-                incrementer_for_letter[letter] += letter_was_in_column[letter]
-            else:
-                incrementer_for_letter[letter] = letter_was_in_column[letter]
-        letter_was_in_column = dict()
-
-    return ways_arr
+alphabet_size = 256
+modulus = 1000003
 
 
-if __name__ == '__main__':
+def rabin_karp(pattern, text):
+    p_len = len(pattern)
+    t_len = len(text)
+    if p_len > t_len:
+        return False
 
-    w, h = map(int, input().split(" "))
+    p_hash = 0
+    text_hash = 0
+    modulus_power = 1
+    count = 0
 
-    matrix = [list(input())[:w] for i in range(h)]
-    ways_count = find_ways_count(matrix, w, h)
+    for i in range(p_len):
+        p_hash = (ord(pattern[i]) + p_hash * alphabet_size) % modulus
+        text_hash = (ord(text[i]) + text_hash * alphabet_size) % modulus
+        if i == p_len - 1:
+            continue
+        modulus_power = (modulus_power * alphabet_size) % modulus
 
-    print(ways_count[0][w-1] + ways_count[h-1][w-1])
+    for i in range(0, t_len - p_len + 1):
+        if text_hash == p_hash and text[i: i + p_len] == pattern:
+            count += 1
+        if i == t_len - p_len:
+            continue
+        text_hash = ((text_hash - ord(text[i]) * modulus_power) * alphabet_size + ord(text[i + p_len])) % modulus
+    return count
+
+
+if __name__ == "__main__":
+    pattern = "12k23"
+    text1 = "alskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1a" \
+            "bc12sfabcabcalskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1abc12sfabcabc" \
+            "alskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1abc12s" \
+            "fabcabcalskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1abc12sfabcabc" \
+            "alskfjaldsabc1abc1abc12kas23adsfabcabcalskfjaldsk23adasadbc1abc12s" \
+            "fabcabcalskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1abc12sfabcabc" \
+            "alskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1abc12sfabc" \
+            "abcalskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1abc12sfabcabc" \
+            "alskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1abc12sfabc" \
+            "abcalskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1abc12sfabcabc" \
+            "alskfjaldsabc1abc1abc12k23adsfabcabcalskfjaldsk23adasadbc1abc12sfabcab" \
+
+    print(rabin_karp(pattern, text1))
